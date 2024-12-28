@@ -1,0 +1,34 @@
+<html>
+  <body>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <div id="g_id_onload"
+         data-client_id="{{GOOG_CLIENT_ID}}"
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+    <div id="g_id_signin_data" ></div>
+    <script>
+      async function handleCredentialResponse(response) {
+        console.log(response);
+        resp = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: {
+              id_token: response.credential,
+              auth_provider: 'google'
+            }
+          }),
+        });
+        console.log(resp);
+        if(resp.status == 200) {
+          let data = await resp.json();
+          document.getElementById('g_id_signin_data').innerHTML = JSON.stringify(data);
+        }
+        
+      }
+    </script>
+  </body>
+</html>
