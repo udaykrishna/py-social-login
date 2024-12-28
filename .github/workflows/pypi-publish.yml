@@ -36,8 +36,7 @@ jobs:
       - name: Build release distributions
         
         run: |
-          # NOTE: put your own distribution build steps here.
-          apt install -y git python3-pip python3-dev build-essential
+          apt update && apt install -y git python3-pip python3-dev build-essential
           python3 -m pip install --upgrade pip
           export RELEASE_TAG=$(echo ${{ github.ref }} | sed -e 's/^refs\/tags\/rc-//g')
           sed -i "s,version=\"0.0.0\",version=\"$RELEASE_TAG\"," setup.py
