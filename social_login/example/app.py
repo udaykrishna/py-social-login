@@ -23,10 +23,6 @@ def login():
     print("----------")
     return resp.dict()
 
-@app.route('/login-google', methods = ['GET'])
-def test():
-    return render_template('google.html', GOOG_CLIENT_ID=GOOG_CLIENT_ID)
-
 @app.route('/apple-login', methods = ['GET'])
 def apple_login():
     # test tokens expired
