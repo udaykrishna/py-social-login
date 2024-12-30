@@ -135,7 +135,7 @@ class OAuth2Manager(object):
             else:
                 return None
     
-    def parse_token(self, jwt_token, valid_aud=[], ignore_aud=False):
+    def parse_token(self, jwt_token, valid_aud=[], ignore_aud=False,algorithms=['RS256', 'HS256']):
         
         unverified_data = jwt.decode(jwt_token, '', verify=False, options={'verify_signature': False})
         if ignore_aud:
@@ -143,7 +143,7 @@ class OAuth2Manager(object):
         headers = jwt.get_unverified_header(jwt_token)
         data_overides = {"alg":headers.get("alg"), "kid":headers.get("kid")}
         try:
-            decoded_data = jwt.decode(jwt_token, self.get_cert(headers['kid']), audience=valid_aud, verify=True)
+            decoded_data = jwt.decode(jwt_token, self.get_cert(headers['kid']), audience=valid_aud, verify=True, algorithms=algorithms)
             decoded_data["claim_valid"] = True
             data = decoded_data
         except jwt.exceptions.InvalidTokenError as e:
@@ -154,10 +154,10 @@ class OAuth2Manager(object):
             data.update(data_overides)
             return data
     
-    def get_user_data(self, login_data, valid_aud=[], ignore_aud=False, user_info_overrides={}):
+    def get_user_data(self, login_data, valid_aud=[], ignore_aud=False, user_info_overrides={},algorithms=['RS256', 'HS256']):
         valid_aud.append(self.client_id)
         if login_data.get('id_token'):
-            token_data = self.parse_token(login_data['id_token'], valid_aud=valid_aud, ignore_aud=ignore_aud)
+            token_data = self.parse_token(login_data['id_token'], valid_aud=valid_aud, ignore_aud=ignore_aud, algorithms=algorithms)
             login_data.update(token_data)
         token = self.TOKEN_CLASS(**login_data)
         user_info_overrides.update({"valid_aud":valid_aud})
