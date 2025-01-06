@@ -10,7 +10,7 @@
     <script>
       async function handleCredentialResponse(response) {
         console.log(response);
-        resp = await fetch('/login', {
+        resp = await fetch('/api/v1/auth/social-login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
