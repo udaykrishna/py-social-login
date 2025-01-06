@@ -145,6 +145,7 @@ class OAuth2Manager(object):
             valid_aud.append(unverified_data.get('aud'))
         headers = jwt.get_unverified_header(jwt_token)
         data_overides = {"alg":headers.get("alg"), "kid":headers.get("kid")}
+        data = unverified_data
         try:
             decoded_data = jwt.decode(jwt_token, self.get_cert(headers['kid']), audience=valid_aud, verify=True, algorithms=VALID_ALGS)
             decoded_data["claim_valid"] = True
